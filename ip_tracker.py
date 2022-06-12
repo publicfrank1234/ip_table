@@ -7,9 +7,7 @@ import timeit
 
 class IpTracker:
     """ A class to collect IP data and list the most visited IPs
-
         _ _ _ 
-
         method: 
         request_handled() - only use hash table to bucket the ip address by their counts. 
         top100() - loop through the bucked hash table and return a list of most used ips 
@@ -43,7 +41,6 @@ class IpTracker:
         new_cnt_ip_set.add(ip_address)
 
         if ip_counts not in self.cnt_set:
-            #bisect.insort(self.cnt_sorted, ip_counts)
             self.cnt_set.add(ip_counts)
 
     def top100(self):

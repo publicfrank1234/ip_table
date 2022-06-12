@@ -1,6 +1,5 @@
 import bisect
-from collections import defaultdict, deque
-from ipaddress import ip_address
+from collections import defaultdict
 import random
 import sys
 import timeit
@@ -63,13 +62,11 @@ class IpTracker:
 
     def top100(self):
         """"return a list of ips ordered by counts: [(counts, ip)]"""
-        # return list(map(lambda x: x[1], self.top100))[::-1]   # time complexity: O(1)
-        return sorted(self.top100)
+        return sorted(self.top100)[::-1]
 
     def clear(self):
         """"reset the memory"""
-        self.dict = {
-        }  # key: ip_address, value: [cnt, top100_index(-1 means not in the top100)]
+        self.dict = {}
         self.top100 = []
 
 
@@ -78,14 +75,12 @@ class IpTrackerHeap:
 
     def __init__(self, n=10):
         """dict: lookup table, e.g. dict[ip] = counts; top100: ordered List, e.g. [(count, ip)]"""
-        self.dict = {
-        }  # key: ip_address, value: [cnt, top100_index(-1 means not in the top100)]
+        self.dict = {}
         self.top100 = []
         self.depth = n
 
     def request_handled(self, ip_address):
         """"O(1) insertion of ip address """
-        # self.dict[ip_address] += 1   # time complexity: O(1)
         ip_record = self.dict.get(ip_address, IpRecord(ip_address=ip_address))
         ip_record.inc()
         self.dict[ip_address] = ip_record
@@ -108,16 +103,14 @@ class IpTrackerHeap:
     def __push_to_top100__(self, ip_record):
         ip_record.in_top100 = True
         bisect.insort(self.top100, ip_record)
-        #self.top100.insert(0, ip_record)
 
     def top100(self):
         """"return a list of ips ordered by counts: [(counts, ip)]"""
-        # return list(map(lambda x: x[1], self.top100))[::-1]   # time complexity: O(1)
-        return sorted(self.top100)
+        return sorted(self.top100)[::-1]
 
     def clear(self):
         """"reset the memory"""
-        self.dict = defaultdict(int)
+        self.dict = {}
         self.top100 = []
 
 
