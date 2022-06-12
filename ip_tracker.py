@@ -6,10 +6,23 @@ import timeit
 
 
 class IpTracker:
-    """ A class to collect IP data and list the most visited IPs """
+    """ A class to collect IP data and list the most visited IPs
+
+        _ _ _ 
+
+        method: 
+        request_handled() - only use hash table to bucket the ip address by their counts. 
+        top100() - loop through the bucked hash table and return a list of most used ips 
+
+    """
 
     def __init__(self, n=100):
-        """dict: lookup table, e.g. dict[ip] = counts; top100: ordered List, e.g. [(count, ip)]"""
+        """
+            ip2cnt: lookup table, ip -> counts; 
+            cnt2group: cnt -> group of ips with same counts; 
+            cnt_set: set of existing cnt buckets 
+            depth: default 100
+        """
         self.ip2cnt = defaultdict(int)
         self.cnt2group = defaultdict(set)
         self.cnt_set = set()
@@ -34,7 +47,7 @@ class IpTracker:
             self.cnt_set.add(ip_counts)
 
     def top100(self):
-        """"return a list of ips ordered by counts: [(counts, ip)]"""
+        """"return a list of ips ordered by counts """
         res = []
         grp_length = 0
         for cnt in sorted(self.cnt_set)[::-1]:
