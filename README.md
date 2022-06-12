@@ -34,18 +34,22 @@ random 20M IPs. We will check the average `request_handled()`  and `top100()` re
 <br/>
 
 ## What would you do differently if you had more time?
-I would do more profile and figure out why the worst-case `request_handled()` time with 20M records is so high ~1s. 
-Profiling also shows a lot of time wasted in generating the random IP addresses. Maybe that can be optimized. 
-I can also parallelize the caculation using Redis queue. 
-Maybe consult others if there is another algorithm. 
+1. I would do more profile and figure out why the worst-case `request_handled()` time with 20M records is so high ~1s. 
+2. Profiling also shows a lot of time wasted in generating the random IP addresses. Maybe that can be optimized. 
+3. I can also parallelize the caculation using Redis queue. 
+4. Maybe consult others if there is another algorithm. 
 
 <br/>
 
 
 ## What is the runtime complexity of each function?
-`request_handled()`: O(1). It mostly uses hash table which is O(1). I also tried to use heap and BST tree initially in this call to maintain the ordered top100 list direclty. It uses a binary search or linear search on a fixed length array. So the time complexity is O(100ln(100)) which is approaximated as O(1).
+`request_handled()`: O(1). 
 
-`top100()`: it is also approximated as O(1) because it is on a fixed length array. 
+It mostly uses hash table which is O(1). I also tried to use heap and BST tree initially in this call to maintain the ordered top100 list direclty. It uses a binary search or linear search on a fixed length array. So the time complexity is O(100ln(100)) which is approaximated as O(1).
+
+`top100()`: ~O(1)
+
+it is also approximated as O(1) because it is on a fixed length array O(100ln(100))
 
 <br/>
 
@@ -59,19 +63,25 @@ The problem is that `request_handled()` worst-case on 20M records can be 1s. The
 
 ## What other approaches did you decide not to pursue?
 I tried to use heap and bst tree in `request_handled()` cinitially.
-I did some profiling on it. The dataclass I used earlier was having some delays but that is not the problem.  
 
+I did some profiling on it. The dataclass I used earlier was having some delays but that is not the problem for worst-case 
+`request_handled()` time. 
 <br/>
 
 ## How would you test this?
 
 Test #1: 
 
-ip from 255.255.255.0/24, each ip is repeated by the last 8bits. 
+IPs are from 255.255.255.0/24 and each ip is repeated by the last 8bits. 
+
 for example, 
-    255.255.255.255 will be repeated 255 times 
-    ...
-    255.255.255.0 will be repeated 0 times 
+
+```
+255.255.255.255 will be repeated 255 times 
+...
+255.255.255.0 will be repeated 0 times 
+```
+
 We will check if the repeated time and IP matches the above pattern. If it matches, the test will pass. 
 
 Test #2: 
